@@ -31,6 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // 认证配置
         http
                 //关闭csrf
                 .csrf().disable()
@@ -38,7 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                // 对于登录接口 允许匿名访问(即放行)
+                // 对于登录接口 允许匿名访问(即放行) 携带token（说明是有身份者）反而不能访问
+                // .anonymous()表达主要是指用户（登录与否）的状态。
+                // 基本上，在用户通过“身份验证”之前，它是“匿名用户”。
+                // 这就像每个人都有一个“默认角色”。
                 .antMatchers("/user/login").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
                 .anyRequest().authenticated();

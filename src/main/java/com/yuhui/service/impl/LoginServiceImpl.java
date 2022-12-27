@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -56,4 +57,21 @@ public class LoginServiceImpl implements LoginService {
         map.put("token", jwt);
         return new ResponseResult(200, "登陆成功", map);
     }
+
+    @Override
+    public ResponseResult logout() {
+        // 前端会携带token访问，这样才知道是谁要退出。jwt无状态
+        // 从SecurityContextHolder中获取用户id
+        // 无需删除SecurityContextHolder里面的值，可以理解为不同请求存放的容器不同，其原理和threadlocal有点相似
+        // 同一个请求，从SecurityContextHolder中获取的值即之前filter存放的值
+        // 个人理解，可能有误
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        Long userId = loginUser.getUser().getId();
+        // 删除redis里面的值
+        redisCache.deleteObject("login:" + userId);
+        return new ResponseResult(200,"退出成功");
+    }
+
+
 }

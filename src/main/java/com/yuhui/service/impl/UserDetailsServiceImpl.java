@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -30,17 +33,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //条件构造器
+        // 条件构造器
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getUserName, username);
         User user = userMapper.selectOne(queryWrapper);
-        //若查询不到就通过抛出异常来给出提示
+        // 若查询不到就通过抛出异常来给出提示
         if (Objects.isNull(user)) {
             throw new RuntimeException("用户名或密码错误");
         }
-        //TODO 根据用户查询权限信息 添加到LoginUser中
-
-        //封装成UserDetails对象返回
-        return new LoginUser(user);
+        // TODO 根据用户查询权限信息 添加到LoginUser中
+        List<String> list = new ArrayList<>(Arrays.asList("test"));
+        // 封装成UserDetails对象返回
+        return new LoginUser(user, list);
     }
 }

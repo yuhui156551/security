@@ -33,7 +33,7 @@ public class LoginUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(authorities!=null){
+        if(authorities != null){
             return authorities;
         }
         // 把permissions中字符串类型的权限信息转换成GrantedAuthority对象存入authorities中

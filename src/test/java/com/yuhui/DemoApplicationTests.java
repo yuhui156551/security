@@ -1,5 +1,6 @@
 package com.yuhui;
 
+import com.yuhui.mapper.MenuMapper;
 import com.yuhui.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,10 +12,13 @@ import javax.annotation.Resource;
 class DemoApplicationTests {
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private MenuMapper menuMapper;
 
     @Test
     void testMapper() {
-        System.out.println(userMapper.selectList(null));
+//        System.out.println(userMapper.selectList(null));
+        System.out.println(menuMapper.selectPermsByUserId(1L));
     }
 
     @Test

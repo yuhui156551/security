@@ -1,13 +1,13 @@
 package com.yuhui.config;
 
 import com.yuhui.filter.JwtAuthenticationTokenFilter;
+import com.yuhui.handler.MyAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -48,13 +48,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                // 公共资源，直接放行
+                .mvcMatchers("/login.html").permitAll()
+                .and()
+                .formLogin()
+                .loginPage("/login.html")// 指定默认的登录页面
+                .loginProcessingUrl("/doLogin")// 指定处理登录请求 url
+                .usernameParameter("uname")
+                .passwordParameter("passwd")
+                .successForwardUrl("/index")//forward 跳转之后地址栏不变   注意:不会跳转到之前请求路径
+                .successHandler(new MyAuthenticationSuccessHandler())// 认证成功的处理
+                .failureUrl("/login.html");
                 // 对于登录接口 允许匿名访问(即放行) 携带token（说明是有身份者）反而不能访问
                 // .anonymous()表达主要是指用户（登录与否）的状态。
                 // 基本上，在用户通过“身份验证”之前，它是“匿名用户”。
                 // 这就像每个人都有一个“默认角色”。
-                .antMatchers("/user/login").anonymous()
+//                .antMatchers("/user/login").anonymous()
                 // 除上面外的所有请求全部需要鉴权认证
-                .anyRequest().authenticated();
+//                .anyRequest().authenticated();
 
         // 把token校验过滤器添加到过滤器链中
         // 放在UsernamePasswordAuthenticationFilter的前面

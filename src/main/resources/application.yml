@@ -10,5 +10,14 @@ spring:
     host: 192.168.44.100
     password: 123321
 
+  thymeleaf:
+    cache: false
+
+# 自定义登录账号密码
+  security:
+    user:
+      name: root
+      password: 123
+
 #mybatis-plus:
 #  mapper-locations: classpath*:/mapper/**/*.xml #xml文件位置，这是默认查找地址，我们放在resource下，可以不配置。

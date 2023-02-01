@@ -24,7 +24,8 @@ class DemoApplicationTests {
     @Test
     void TestBCryptPasswordEncoder(){
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String encode = bCryptPasswordEncoder.encode("1234");
+        // $2a$10$pOpv0jeqUBRxhFhDlhzdAuuqJh0CHy4RnwCbCIzzbfN4jj0N7tDK.
+        String encode = bCryptPasswordEncoder.encode("123");
         System.out.println(encode);
     }
 

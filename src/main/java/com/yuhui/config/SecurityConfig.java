@@ -7,12 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -39,6 +43,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
+    /*@Bean
+    public UserDetailsService userDetailsService() {
+        InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
+        userDetailsService.createUser(User.withUsername("aaa").password("{noop}123").roles("admin").build());
+        return userDetailsService;
+    }*/
+
+    /*@Autowired
+    public void initialize(AuthenticationManagerBuilder builder) throws Exception {
+         builder.userDetailsService(userDetailsService());
+    }*/
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // 认证配置
@@ -61,12 +77,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(new MyAuthenticationSuccessHandler())// 认证成功的处理
                 .failureHandler(new MyAuthenticationFailureHandler());// 认证失败的处理
 //                .failureUrl("/login.html");
-                // 对于登录接口 允许匿名访问(即放行) 携带token（说明是有身份者）反而不能访问
-                // .anonymous()表达主要是指用户（登录与否）的状态。
-                // 基本上，在用户通过“身份验证”之前，它是“匿名用户”。
-                // 这就像每个人都有一个“默认角色”。
+        // 对于登录接口 允许匿名访问(即放行) 携带token（说明是有身份者）反而不能访问
+        // .anonymous()表达主要是指用户（登录与否）的状态。
+        // 基本上，在用户通过“身份验证”之前，它是“匿名用户”。
+        // 这就像每个人都有一个“默认角色”。
 //                .antMatchers("/user/login").anonymous()
-                // 除上面外的所有请求全部需要鉴权认证
+        // 除上面外的所有请求全部需要鉴权认证
 //                .anyRequest().authenticated();
 
         // 把token校验过滤器添加到过滤器链中

@@ -14,6 +14,7 @@ public class HelloController {
 //    @PreAuthorize("hasAuthority('system:dept:list')")
     @PreAuthorize("@yh.hasAuthority('system:dept:list')")
     public String hello() {
+        // 默认是在内存中生成用户信息
         Authentication authentication = SecurityContextHolder
                 .getContext().getAuthentication();
         User principal = (User) authentication.getPrincipal();

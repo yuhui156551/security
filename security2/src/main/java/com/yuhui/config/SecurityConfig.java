@@ -2,11 +2,17 @@ package com.yuhui.config;
 
 import com.yuhui.handler.MyAuthenticationFailureHandler;
 import com.yuhui.handler.MyAuthenticationSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
  * @author yuhui
@@ -17,7 +23,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /**
+     * 官网建议set注入用resource，构造注入用autowired
+     */
+    private final MyUserDetailService myUserDetailService;
 
+    @Autowired
+    public SecurityConfig(MyUserDetailService myUserDetailService) {
+        this.myUserDetailService = myUserDetailService;
+    }
+
+    // 默认全局配置 AuthenticationManager
     /*@Bean
     public UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager userDetailsService = new InMemoryUserDetailsManager();
@@ -25,10 +41,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return userDetailsService;
     }*/
 
-    /*@Autowired
+    // 自定义 AuthenticationManager 并没有在工厂当中暴露出来
+    @Autowired
     public void initialize(AuthenticationManagerBuilder builder) throws Exception {
-         builder.userDetailsService(userDetailsService());
-    }*/
+         builder.userDetailsService(myUserDetailService);
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

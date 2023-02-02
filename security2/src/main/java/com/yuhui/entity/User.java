@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-public class User  implements UserDetails {
+public class User implements UserDetails {
     private Integer id;
     private String username;
     private String password;
@@ -23,7 +23,7 @@ public class User  implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        roles.forEach(role->grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
+        roles.forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
         return grantedAuthorities;
     }
 

@@ -3,16 +3,12 @@ package com.yuhui.config;
 import com.yuhui.handler.MyAuthenticationFailureHandler;
 import com.yuhui.handler.MyAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
  * @author yuhui
@@ -51,11 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 认证配置
         http
-                //关闭csrf
+                // 关闭csrf
                 .csrf().disable()
-                //不通过Session获取SecurityContext
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
                 .authorizeRequests()
                 .mvcMatchers("/login.html").permitAll()// 公共资源，直接放行
                 .anyRequest().authenticated()// 其他所有资源都需要认证
@@ -65,9 +58,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/doLogin")// 指定处理登录请求 url
                 .usernameParameter("uname")
                 .passwordParameter("passwd")
-                .successForwardUrl("/hello")//forward 跳转之后地址栏不变   注意:不会跳转到之前请求路径
-                .successHandler(new MyAuthenticationSuccessHandler())// 认证成功的处理
-                .failureHandler(new MyAuthenticationFailureHandler());// 认证失败的处理
+                .defaultSuccessUrl("/index.html", true)// 总是跳转到此页面
+                .failureUrl("/login.html")// 重定向到登录页面
+                .and()
+                .logout()// 开启退出登录
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login.html");
+//                .successHandler(new MyAuthenticationSuccessHandler())// 认证成功的处理
+//                .failureHandler(new MyAuthenticationFailureHandler());// 认证失败的处理
     }
 
 }

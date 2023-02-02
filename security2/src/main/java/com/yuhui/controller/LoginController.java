@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author yuhui
  * @date 2022/12/26 13:47
  */
-@Controller
+/*@Controller
 public class LoginController {
 
     @RequestMapping("/login.html")
@@ -15,4 +15,4 @@ public class LoginController {
         return "login";// html页面的文件名
     }
 
-}
+}*/

@@ -11,13 +11,12 @@ public class HelloController {
 
     @RequestMapping("/hello")
     public String hello() {
-        // 默认是在内存中生成用户信息
-        /*Authentication authentication = SecurityContextHolder
-                .getContext().getAuthentication();
+        // 代码中获取用户信息
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User principal = (User) authentication.getPrincipal();
         System.out.println("身份 :" + principal.getUsername());
         System.out.println("凭证 :" + authentication.getCredentials());
-        System.out.println("权限 :" + authentication.getAuthorities());*/
+        System.out.println("权限 :" + authentication.getAuthorities());
         return "hello security";
     }
 }

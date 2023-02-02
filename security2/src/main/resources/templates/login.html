@@ -11,5 +11,9 @@
     密码:<input name="passwd" type="password"/><br>
     <input type="submit" value="登录"/>
 </form>
+<h3>
+    <!--重定向的错误信息在session作用域-->
+    <div th:text="${session.SPRING_SECURITY_LAST_EXCEPTION}"></div>
+</h3>
 </body>
 </html>

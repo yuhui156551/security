@@ -11,8 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 /**
- * @author yuhui
- * @date 2022/12/26 11:29
+ * 传统 Web开发
  */
 //@EnableWebSecurity
 @Configuration

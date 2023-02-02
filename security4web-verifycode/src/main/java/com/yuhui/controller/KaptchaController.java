@@ -25,6 +25,7 @@ public class KaptchaController {
     public void getVerifyCode(HttpServletResponse response, HttpSession session) throws IOException {
         response.setContentType("image/png");
         String code = producer.createText();
+        // 验证码保存到 session 中
         session.setAttribute("kaptcha", code);// 可以更换成 redis 实现
         BufferedImage bi = producer.createImage(code);
         ServletOutputStream os = response.getOutputStream();

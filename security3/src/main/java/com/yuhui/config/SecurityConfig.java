@@ -1,9 +1,11 @@
 package com.yuhui.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yuhui.service.MyUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,17 +27,24 @@ import java.util.Map;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
+    private final MyUserDetailService myUserDetailService;
+
+    public SecurityConfig(MyUserDetailService myUserDetailService) {
+        this.myUserDetailService = myUserDetailService;
+    }
+
+    /*@Bean
     public UserDetailsService userDetailsService() {
         InMemoryUserDetailsManager inMemoryUserDetailsManager = new InMemoryUserDetailsManager();
         inMemoryUserDetailsManager.createUser(User.withUsername("root").password("{noop}123").roles("admin").build());
         return inMemoryUserDetailsManager;
-    }
+    }*/
 
     // 自定义 AuthenticationManager
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService());
+        // 配置 authenticationManager 使用自定义UserDetailService
+        auth.userDetailsService(myUserDetailService);
     }
 
     // 暴露出 AuthenticationManager
@@ -83,6 +93,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
+                .and()
+                // 异常处理
+                .exceptionHandling()
+                .authenticationEntryPoint((req, resp, ex) -> {
+                    resp.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                    resp.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    resp.getWriter().println("请先进行认证！");
+                })
                 .and()
                 .csrf().disable();
 

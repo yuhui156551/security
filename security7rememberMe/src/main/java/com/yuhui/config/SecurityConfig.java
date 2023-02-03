@@ -1,5 +1,6 @@
 package com.yuhui.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -10,7 +11,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
+import java.util.UUID;
 
 /**
  * @author yuhui
@@ -18,6 +24,13 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
  */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private DataSource dataSource;
+
+    @Autowired
+    public SecurityConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Bean
     public UserDetailsService userDetailsService(){
@@ -31,12 +44,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService());
     }
 
+    /**
+     * 指定数据库持久化
+     */
     @Bean
-    public RememberMeServices rememberMeServices() {
-        return new PersistentTokenBasedRememberMeServices(
-                "key",// 自定义一个生成令牌 key 默认 UUID
-                userDetailsService(), // 认证数据源
-                new InMemoryTokenRepositoryImpl());// 令牌存储方式
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource);// 设置数据源
+        jdbcTokenRepository.setCreateTableOnStartup(false);// 启动时创建表结构，如果有了，就改成false
+        return jdbcTokenRepository;
     }
 
     @Override
@@ -47,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .and()
                 .rememberMe() // 开启记住我功能
-                .rememberMeServices(rememberMeServices())// 自定义 RememberMeServices
+                .tokenRepository(persistentTokenRepository())
                 .and()
                 .csrf().disable();
     }

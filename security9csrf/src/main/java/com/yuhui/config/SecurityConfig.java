@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -84,6 +85,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .and().cors().configurationSource(configurationSource())
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint((req, resp, e) -> {
+                    resp.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                    resp.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    resp.getWriter().write("尚未认证！");
+                })
+                .accessDeniedHandler((request, response, e) -> {
+                    response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                    response.setStatus(HttpStatus.FORBIDDEN.value());
+                    response.getWriter().write("无权访问!");
+                })
                 .and().csrf().disable();
                 // 将令牌保存到cookie中  允许cookie前端获取
 //                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());

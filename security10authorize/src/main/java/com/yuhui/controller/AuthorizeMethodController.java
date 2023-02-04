@@ -14,7 +14,6 @@ import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
 @RestController
 @RequestMapping("/hello")
 public class AuthorizeMethodController {
@@ -81,4 +80,4 @@ public class AuthorizeMethodController {
     public String rolesAllowed() {
         return "RolesAllowed";
     }
-}*/
+}

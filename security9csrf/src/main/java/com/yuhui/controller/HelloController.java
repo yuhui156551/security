@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RestController;
  * @author yuhui
  * @date 2023/2/4 16:36
  */
-/*@RestController
+@RestController
 public class HelloController{
 
     @GetMapping("/post")
-    @CrossOrigin(origins = "http://localhost:8081")
+//    @CrossOrigin(origins = "http://localhost:8081")
     public String post(){
         return "hello post";
     }
-}*/
+}
 
 

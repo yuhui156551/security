@@ -14,7 +14,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,11 +83,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .and()
-                .csrf()
+                .and().cors().configurationSource(configurationSource())
+                .and().csrf().disable();
                 // 将令牌保存到cookie中  允许cookie前端获取
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
         http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    CorsConfigurationSource configurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedHeaders(Arrays.asList("*"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("*"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
+        corsConfiguration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
     }
 }

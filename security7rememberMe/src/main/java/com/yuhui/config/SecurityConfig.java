@@ -110,6 +110,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public RememberMeServices rememberMeServices(){
         return new MyPersistentTokenBasedRememberMeServices(UUID.randomUUID().toString(),
                 userDetailsService(),
-                new InMemoryTokenRepositoryImpl());
+                new InMemoryTokenRepositoryImpl());// 内存令牌
     }
 }

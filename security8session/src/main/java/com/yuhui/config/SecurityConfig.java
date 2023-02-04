@@ -38,7 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     response.setContentType("application/json;charset=UTF-8");
                     response.getWriter().println(s);
                     response.flushBuffer();
-                });
+                })
+                .maxSessionsPreventsLogin(true);// 登录之后禁止再次登录
     }
 
     @Bean

@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 
+/*
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
@@ -23,11 +24,13 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
         this.userDetailsService = userDetailsService;
     }
 
-    /**
+    */
+/**
      * 配置客户端细节 如 客户端 id 秘钥 重定向 url 等
      *
      * @throws Exception
-     */
+     *//*
+
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory().withClient("client")
@@ -41,4 +44,4 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.userDetailsService(userDetailsService);// 开启刷新令牌必须指定
     }
-}
+}*/

@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import javax.sql.DataSource;
 import java.util.concurrent.TimeUnit;
 
+/*
 @Configuration
 @EnableAuthorizationServer
 public class JdbcAuthorizationServer extends AuthorizationServerConfigurerAdapter {
@@ -73,4 +74,4 @@ public class JdbcAuthorizationServer extends AuthorizationServerConfigurerAdapte
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.withClientDetails(clientDetails());// 使用 jdbc存储
     }
-}
+}*/

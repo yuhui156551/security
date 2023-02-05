@@ -32,10 +32,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
                 // 访问 /admin/** 需要 ADMIN 角色
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                .mvcMatchers("/admin/**").hasRole("ADMIN")
+                .mvcMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 // 访问 /getInfo 需要 READ_INFO 权限
-                .antMatchers("/getInfo").hasAuthority("READ_INFO")
+                .mvcMatchers("/getInfo").hasAuthority("READ_INFO")
                 .anyRequest().authenticated()
                 .and().formLogin()
                 .and().csrf().disable();

@@ -31,7 +31,7 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory().withClient("client")
-                .secret(passwordEncoder.encode("secret"))
+                .secret(passwordEncoder.encode("secret"))// 秘钥，必须加密
                 .redirectUris("http://www.baidu.com")
                 .scopes("client:read,user:read")
                 .authorizedGrantTypes("authorization_code", "refresh_token","implicit","password","client_credentials");
